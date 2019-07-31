@@ -21,7 +21,7 @@ class App extends React.Component {
   fetchData = () => {
     this.setState({ loading: true, isTableActive: true });
 
-    fetch(`/${this.state.inputValue}`
+    fetch(`https://whispering-earth-69130.herokuapp.com/${this.state.inputValue}`
     ).then(data => data.json())
       .then(data => {
         this.setState({ loading: false, data: data.data, });
