@@ -1,26 +1,70 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { } from 'antd';
+import { Layout, Input, Button } from 'antd';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+import './App.css';
+import DataTable from './DataTable';
+
+const { Search } = Input;
+const { Content, } = Layout;
+
+class App extends React.Component {
+
+  state = {
+    loading: false,
+    iconLoading: false,
+    inputValue: "",
+    data: [],
+    isTableActive: false
+  };
+  fetchData = () => {
+    this.setState({ loading: true, isTableActive: true });
+
+    fetch(`/${this.state.inputValue}`
+    ).then(data => data.json())
+      .then(data => {
+        this.setState({ loading: false, data: data.data, });
+
+      })
+      .catch(err => {
+        alert("Something went wrong");
+      })
+
+
+  }
+  handleChange = (e) => {
+    this.setState({ inputValue: e.target.value })
+  }
+  render() {
+    let { loading, inputValue, data, isTableActive } = this.state;
+    return (
+      <Layout >
+
+        <Content className="layout-content">
+
+
+          <div className="flex-center">
+            <Search
+              value={inputValue}
+              placeholder="Enter number to search top words"
+              onChange={this.handleChange}
+              onSearch={value => console.log(value)}
+              className="max-width-300 mr-16 mb-16"
+
+            />
+            <Button type="primary" onClick={this.fetchData} loading={loading}>
+              Loading
+              </Button>
+          </div>
+
+          <DataTable active={isTableActive} loading={loading} data={data} />
+        </Content>
+      </Layout>
+
+
+    );
+  }
 }
 
 export default App;
